@@ -447,55 +447,58 @@ public class ServicesFragment extends ListFragment {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             Service srv = mServices.get((Integer) buttonView.getTag());
-            if (mActivity.mProfileService != null) {
-                switch (srv.mType) {
-                    case HFP:
-                        if (isChecked) {
-                            mActivity.mProfileService.getHfpClient().connect(mActivity.mDevice);
-                            buttonView.setEnabled(false);
-                        } else {
-                            mActivity.mProfileService.getHfpClient().disconnect(mActivity.mDevice);
-                            buttonView.setEnabled(false);
-                        }
-                        break;
 
-                    case PBAP:
-                        if (isChecked) {
-                            if (mActivity.mProfileService.getPbapClient()!= null)
-                                mActivity.mProfileService.getPbapClient().connect();
-                            buttonView.setEnabled(false);
-                        } else {
-                            if (mActivity.mProfileService.getPbapClient()!= null)
-                                mActivity.mProfileService.getPbapClient().disconnect();
-                            buttonView.setEnabled(false);
+            switch (srv.mType) {
+                case HFP:
+                    if (isChecked) {
+                        if (mActivity.mProfileService.getHfpClient() != null) {
+                            mActivity.mProfileService.getHfpClient()
+                                    .connect(mActivity.mDevice);
                         }
-                        break;
+                        buttonView.setEnabled(false);
+                    } else {
+                        if (mActivity.mProfileService.getHfpClient() != null) {
+                            mActivity.mProfileService.getHfpClient()
+                                    .disconnect(mActivity.mDevice);
+                        }
+                        buttonView.setEnabled(false);
+                    }
+                    break;
 
-                    case MAP:
-                        BluetoothMasClient cli = mActivity.mProfileService
+                case PBAP:
+                    if (isChecked) {
+                        if (mActivity.mProfileService.getPbapClient()!= null)
+                            mActivity.mProfileService.getPbapClient().connect();
+                        buttonView.setEnabled(false);
+                    } else {
+                        if (mActivity.mProfileService.getPbapClient()!= null)
+                            mActivity.mProfileService.getPbapClient().disconnect();
+                        buttonView.setEnabled(false);
+                    }
+                    break;
+
+                case MAP:
+                    BluetoothMasClient cli = mActivity.mProfileService
                             .getMapClient(srv.mMasInstance.getId());
-                        if(cli != null ) {
-                            if (isChecked) {
-                                if (buttonView.getId() == R.id.service_switch) {
-                                    cli.connect();
-                                } else {
-                                    cli.setNotificationRegistration(true);
-                                }
-                                buttonView.setEnabled(false);
-                            } else {
-                                if (buttonView.getId() == R.id.service_switch) {
-                                    cli.disconnect();
-                                } else {
-                                    cli.setNotificationRegistration(false);
-                                }
-                                buttonView.setEnabled(false);
-                            }
+                    if (isChecked) {
+                        if (buttonView.getId() == R.id.service_switch) {
+                            cli.connect();
+                        } else {
+                            cli.setNotificationRegistration(true);
                         }
-                        break;
-                    case AVRCP:
-                        // not to be handled
-                        break;
-                }
+                        buttonView.setEnabled(false);
+                    } else {
+                        if (buttonView.getId() == R.id.service_switch) {
+                            cli.disconnect();
+                        } else {
+                            cli.setNotificationRegistration(false);
+                        }
+                        buttonView.setEnabled(false);
+                    }
+                    break;
+                case AVRCP:
+                    // not to be handled
+                    break;
             }
         }
     }
